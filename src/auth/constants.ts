@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { SetMetadata } from '@nestjs/common';
 export const jwtConstants = {
-  secret: '@QEGTUI',
+  secret: '@mysecretkey123',
 };
 
 export const IS_PUBLIC_KEY = 'isPublic';

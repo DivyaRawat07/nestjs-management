@@ -1,6 +1,8 @@
+import { IsEmail } from 'class-validator';
 import { Profile } from 'src/profiles/entities/profile.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   OneToOne,
@@ -33,6 +35,9 @@ export class User {
 
   @Column()
   phoneNumber: string;
+  
+  @CreateDateColumn({ type: 'timestamp' })
+  created!: Date;
 
   @Column()
   address: string;

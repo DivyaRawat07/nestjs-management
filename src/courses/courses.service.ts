@@ -20,7 +20,6 @@ export class CoursesService {
 
   //to create courses in the database by the teacher
   async create(createCourseDto: CreateCourseDto, user) {
-    console.log(user);
     const users = await this.usersService.getById(user.id);
 
     const course = await this.findbyname(createCourseDto.title);
@@ -37,8 +36,6 @@ export class CoursesService {
       };
       obj.user = [users];
       const result = await this.courseRepository.save(obj);
-      console.log('result', result);
-
       return result;
     }
   }
@@ -47,14 +44,22 @@ export class CoursesService {
   async joinCourse(user, CID) {
     const users = await this.usersService.getById(user.id);
     const course = await this.getById(CID);
+    if (course?.seatsFilling >= course?.noOfSeats) {
+      throw new BadRequestException('seat booked for this course');
+    }
     if (course) {
       course.user.push(users);
       const id = course?.id;
-      await this.courseRepository.update(course?.id, {
-        seatsFilling: course?.seatsFilling + 1,
-      });
+
       const result = await this.courseRepository.save(course);
-      console.log('result', result);
+      await this.courseRepository.update(
+        {
+          id: Number(CID),
+        },
+        {
+          seatsFilling: course?.seatsFilling + 1,
+        },
+      );
       return result;
     } else {
       throw new BadRequestException('A course with this ID Does Not exists');
